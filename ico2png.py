@@ -152,6 +152,24 @@ def ico2png(data):
 						]
 					for row in raw_pixels
 					]
+			elif bits_per_pixel == 24:
+				raw_pixels = [
+					[
+						unpack('BBB', data[offset + dib_size + 3 * (y * width + x) : offset + dib_size + 3 * (y * width + x) + 3])
+						for x in xrange(width)
+						]
+					for y in xrange(height-1, -1, -1)
+					]
+				pixels = [
+					[
+						c
+						for px in row
+						for c in (px[2], px[1], px[0], 255)
+						]
+					for row in raw_pixels
+					]
+			else:
+				raise TypeError # don't know how to handle the pixel depth value
 					
 	out = StringIO()
 	w = PNGWriter(result['width'],result['height'],alpha=True)
